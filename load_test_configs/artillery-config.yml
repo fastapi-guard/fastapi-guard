@@ -1,0 +1,175 @@
+# Artillery Load Test Configuration for FastAPI Guard
+# Usage: artillery run artillery-config.yml
+
+config:
+  target: "http://localhost:8000"
+  phases:
+    # Warm-up phase
+    - duration: 30
+      arrivalRate: 5
+      name: "Warm-up"
+    
+    # Ramp-up phase
+    - duration: 60
+      arrivalRate: 10
+      rampTo: 50
+      name: "Ramp-up"
+    
+    # Sustained load phase
+    - duration: 120
+      arrivalRate: 50
+      name: "Sustained load"
+    
+    # Peak load phase
+    - duration: 60
+      arrivalRate: 50
+      rampTo: 100
+      name: "Peak load"
+    
+    # Cool-down phase
+    - duration: 30
+      arrivalRate: 100
+      rampTo: 10
+      name: "Cool-down"
+  
+  # Request defaults
+  defaults:
+    headers:
+      User-Agent: "Artillery Load Test"
+      Accept: "application/json"
+      Content-Type: "application/json"
+  
+  # Payload definitions
+  payload:
+    - path: "test_data.csv"
+      fields:
+        - "username"
+        - "email"
+      order: "sequence"
+      skipHeader: true
+
+scenarios:
+  # Mixed workload scenario
+  - name: "Mixed API Workload"
+    weight: 70
+    flow:
+      # Health check
+      - get:
+          url: "/health"
+          capture:
+            - json: "$.status"
+              as: "health_status"
+      
+      # Simple endpoints
+      - get:
+          url: "/"
+      
+      - get:
+          url: "/api/simple"
+      
+      # Data endpoints
+      - get:
+          url: "/api/data"
+          expect:
+            - statusCode: 200
+            - contentType: json
+      
+      - post:
+          url: "/api/data"
+          json:
+            message: "Load test data"
+            timestamp: "{{ $timestamp }}"
+            user_id: "{{ $randomInt(1, 1000) }}"
+      
+      # Search with various queries
+      - get:
+          url: "/api/search"
+          qs:
+            q: "{{ $randomString() }}"
+      
+      # CPU intensive endpoint (occasionally)
+      - get:
+          url: "/api/cpu"
+          ifTrue: "{{ $randomInt(1, 10) === 1 }}"
+      
+      # Memory intensive endpoint (occasionally)
+      - get:
+          url: "/api/memory"
+          ifTrue: "{{ $randomInt(1, 10) === 1 }}"
+
+  # Authentication scenario
+  - name: "Authentication Load"
+    weight: 20
+    flow:
+      - post:
+          url: "/api/auth/login"
+          json:
+            username: "{{ username }}"
+            password: "password123"
+          capture:
+            - json: "$.token"
+              as: "auth_token"
+          expect:
+            - statusCode: [200, 401]
+
+  # Security testing scenario (malicious patterns)
+  - name: "Security Pattern Testing"
+    weight: 5
+    flow:
+      # SQL injection attempts (should be blocked)
+      - get:
+          url: "/api/search"
+          qs:
+            q: "'; DROP TABLE users; --"
+          expect:
+            - statusCode: 403
+      
+      # XSS attempts (should be blocked)
+      - get:
+          url: "/api/search"
+          qs:
+            q: "<script>alert('xss')</script>"
+          expect:
+            - statusCode: 403
+      
+      # Path traversal attempts (should be blocked)
+      - get:
+          url: "/api/search"
+          qs:
+            q: "../../../etc/passwd"
+          expect:
+            - statusCode: 403
+
+  # Rate limiting test scenario
+  - name: "Rate Limiting Test"
+    weight: 5
+    flow:
+      # Make many requests to trigger rate limiting
+      - loop:
+          - get:
+              url: "/api/limited"
+              expect:
+                - statusCode: [200, 429]
+        count: 20
+
+# Performance thresholds
+ensure:
+  # Response time thresholds
+  p95: 500  # 95th percentile should be under 500ms
+  p99: 1000 # 99th percentile should be under 1000ms
+  
+  # Error rate threshold
+  maxErrorRate: 5  # Maximum 5% error rate
+  
+  # Availability threshold
+  minAvailability: 95  # Minimum 95% availability
+
+# Reporting
+reporting:
+  # Generate detailed HTML report
+  - type: html
+    outputPath: artillery-report.html
+  
+  # Generate JSON report for processing
+  - type: json
+    outputPath: artillery-report.json
