@@ -12,6 +12,8 @@
 
 FastAPI Guard provides comprehensive, production-ready security features that protect your FastAPI applications from common web threats including SQL injection, XSS, bot attacks, brute force attempts, and more.
 
+## 🌐 [**View Live Demo**](https://fastapi-guard.github.io/fastapi-guard/) | [**Interactive Examples**](https://fastapi-guard.github.io/fastapi-guard/#api) | [**Test Reports**](https://fastapi-guard.github.io/fastapi-guard/#tests)
+
 ## 📊 **Proven Performance & Reliability**
 
 | Metric | Result | Target | Status |
@@ -47,6 +49,35 @@ app.add_middleware(SecurityMiddleware)  # That's it! 🎉
 async def hello():
     return {"message": "Hello, secure world!"}
 ```
+
+## 🔄 Comparison with Alternatives
+
+| Solution | Type | Setup Time | Cost/Month | Latency Impact | Data Privacy | Threat Coverage |
+|----------|------|------------|------------|----------------|--------------|-----------------|
+| **FastAPI Guard** | Library | 30 seconds | $0 | +42ms | Complete | Comprehensive WAF |
+| Cloudflare WAF | SaaS | 1-2 hours | $200-2000+ | +100-300ms | External routing | Comprehensive |
+| Imperva WAF | SaaS | 2-4 hours | $500-5000+ | +150-400ms | External routing | Enterprise-grade |
+| fastapi-auth-middlewares | Library | 1-2 hours | $0 | +10-20ms | Complete | Auth only |
+| Custom Implementation | DIY | 40-80 hours | Dev time | Variable | Complete | Manual rules |
+
+### Why Choose FastAPI Guard?
+
+- **🚀 Instant Setup**: Add enterprise security in 3 lines of code
+- **💰 Cost Effective**: Zero ongoing costs vs $2,400-60,000/year for SaaS WAF
+- **⚡ Performance**: 42ms response time vs 100-400ms for cloud solutions  
+- **🔒 Privacy First**: All traffic stays on your infrastructure
+- **🛡️ Comprehensive**: WAF + Bot Detection + Rate Limiting + Management API
+- **🎯 Zero Dependencies**: No external services or third-party routing required
+
+### Key Advantages Over SaaS Solutions
+
+| Advantage | FastAPI Guard | Cloudflare/Imperva |
+|-----------|---------------|-------------------|
+| **Data Sovereignty** | ✅ All traffic stays local | ❌ Traffic routed externally |
+| **Latency** | ✅ 42ms overhead | ❌ 100-400ms routing delay |
+| **Cost Predictability** | ✅ One-time cost | ❌ Monthly scaling costs |
+| **Customization** | ✅ Full control over rules | ❌ Limited rule customization |
+| **Zero Vendor Lock-in** | ✅ Own your security stack | ❌ Dependent on SaaS provider |
 
 ## 🛡️ Features
 
