@@ -1,4 +1,16 @@
-# FastAPI Guard 🛡️
+# ⚠️ DEPRECATED: FastAPI Guard 🛡️
+
+> **🚨 THIS PROJECT HAS BEEN SUPERSEDED BY [FastAPI Fortify](https://github.com/fastapi-fortify/fastapi-fortify)**
+> 
+> **FastAPI Guard is no longer maintained.** Please migrate to **FastAPI Fortify**, which provides the same functionality with enhanced features and active development.
+> 
+> **Migration is seamless** - FastAPI Fortify maintains 100% API compatibility with FastAPI Guard.
+> 
+> 📦 **Install FastAPI Fortify**: `pip install fastapi-fortify`  
+> 📖 **Documentation**: [fastapi-fortify.github.io](https://fastapi-fortify.github.io)  
+> 🔗 **Repository**: [github.com/fastapi-fortify/fastapi-fortify](https://github.com/fastapi-fortify/fastapi-fortify)
+
+---
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
